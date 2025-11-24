@@ -1,0 +1,31 @@
+import 'package:flutter/cupertino.dart';
+import 'package:mvvm_provider/model/UserModel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class UserViewModel with ChangeNotifier{
+
+  Future<bool> saveUser(UserModel user) async{
+
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.setString("token", user.token.toString());
+    notifyListeners();
+    return true;
+  }
+
+  Future<UserModel> getUser() async{
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final String? token = sharedPreferences.getString("token");
+
+    return UserModel(
+      token: token.toString()
+    );
+  }
+
+  Future<bool> remove() async{
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    print("🧹 SharedPreferences cleared!");
+    return sharedPreferences.clear();
+
+
+  }
+}
